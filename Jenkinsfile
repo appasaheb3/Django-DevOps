@@ -1,8 +1,5 @@
 pipeline {
     agent any
-    environment {
-        IMAGE_TAG = "${BUILD_NUMBER}"
-    }
     stages {
         stage('Checkout') {
             steps {
@@ -12,14 +9,14 @@ pipeline {
         
         stage('Build') {
             steps {
-                sh 'docker build -t appasaheb3/django-devops:${BUILD_NUMBER} .'
+                sh 'docker build -t appasaheb3/django-devops .'
             }
         }
         stage('Push') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'DOCKER_HUB_PASSWORD', usernameVariable: 'DOCKER_HUB_USERNAME')]) {
                     sh 'echo $DOCKER_HUB_PASSWORD | docker login -u $DOCKER_HUB_USERNAME --password-stdin' 
-                    sh 'docker push appasaheb3/django-devops:${BUILD_NUMBER}'
+                    sh 'docker push appasaheb3/django-devops'
                 }
             }
         }
